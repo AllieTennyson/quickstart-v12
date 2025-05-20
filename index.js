@@ -79,3 +79,23 @@ const listFiles = async () => {
 };
 
 listButton.addEventListener("click", listFiles);
+
+const uploadFiles = async () => {
+    try {
+        reportStatus("Uploading files...");
+        const promises = [];
+        for (const file of fileInput.files) {
+            const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+            promises.push(blockBlobClient.uploadBrowserData(file));
+        }
+        await Promise.all(promises);
+        reportStatus("Done.");
+        listFiles();
+    }
+    catch (error) {
+            reportStatus(error.message);
+    }
+}
+
+selectButton.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", uploadFiles);

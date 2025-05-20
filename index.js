@@ -53,3 +53,29 @@ const deleteContainer = async () => {
 
 createContainerButton.addEventListener("click", createContainer);
 deleteContainerButton.addEventListener("click", deleteContainer);
+
+const listFiles = async () => {
+    fileList.size = 0;
+    fileList.innerHTML = "";
+    try {
+        reportStatus("Retrieving file list...");
+        let iter = containerClient.listBlobsFlat();
+        let blobItem = await iter.next();
+        while (!blobItem.done) {
+            fileList.size += 1;
+            fileList.innerHTML += `<option>${blobItem.value.name}</option>`;
+
+
+            blobItem = await iter.next();
+        }
+        if (fileList.size > 0) {
+            reportStatus("Done.");
+        } else {
+            reportStatus("The container does not contain any files.");
+        }
+    } catch (error) {
+        reportStatus(error.message);
+    }
+};
+
+listButton.addEventListener("click", listFiles);

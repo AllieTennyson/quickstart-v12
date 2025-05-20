@@ -30,3 +30,26 @@ const containerName = "container" + new Date().getTime();
 
 // Get a container client from the BlobServiceClient
 const containerClient = blobServiceClient.getContainerClient(containerName);
+
+const createContainer = async () => {
+    try {
+        reportStatus(`Creating container "${containerName}"...`);
+        await containerClient.create();
+        reportStatus(`Done. URL:${containerClient.url}`);
+    } catch (error) {
+        reportStatus(error.message);
+    }
+};
+
+const deleteContainer = async () => {
+    try {
+        reportStatus(`Deleting container "${containerName}"...`);
+        await containerClient.delete();
+        reportStatus(`Done.`);
+    } catch (error) {
+        reportStatus(error.message);
+    }
+};
+
+createContainerButton.addEventListener("click", createContainer);
+deleteContainerButton.addEventListener("click", deleteContainer);

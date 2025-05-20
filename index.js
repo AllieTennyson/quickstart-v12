@@ -99,3 +99,22 @@ const uploadFiles = async () => {
 
 selectButton.addEventListener("click", () => fileInput.click());
 fileInput.addEventListener("change", uploadFiles);
+
+const deleteFiles = async () => {
+    try {
+        if (fileList.selectedOptions.length > 0) {
+            reportStatus("Deleting files...");
+            for (const option of fileList.selectedOptions) {
+                await containerClient.deleteBlob(option.text);
+            }
+            reportStatus("Done.");
+            listFiles();
+        } else {
+            reportStatus("No files selected.");
+        }
+    } catch (error) {
+        reportStatus(error.message);
+    }
+};
+
+deleteButton.addEventListener("click", deleteFiles);
